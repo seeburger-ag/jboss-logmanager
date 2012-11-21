@@ -39,13 +39,13 @@ import java.util.logging.ErrorManager;
  */
 public class AsyncHandler extends ExtHandler {
 
-    private final BlockingQueue<ExtLogRecord> recordQueue;
+    protected final BlockingQueue<ExtLogRecord> recordQueue;
     private final int queueLength;
     private final Thread thread;
     private volatile OverflowAction overflowAction = OverflowAction.BLOCK;
 
     @SuppressWarnings("unused")
-    private volatile int state;
+    protected volatile int state;
 
     private static final AtomicIntegerFieldUpdater<AsyncHandler> stateUpdater = AtomicIntegerFieldUpdater.newUpdater(AsyncHandler.class, "state");
 
@@ -162,7 +162,7 @@ public class AsyncHandler extends ExtHandler {
         }
     }
 
-    private final class AsyncTask implements Runnable {
+    protected final class AsyncTask implements Runnable {
         public void run() {
             final BlockingQueue<ExtLogRecord> recordQueue = AsyncHandler.this.recordQueue;
             final Handler[] handlers = AsyncHandler.this.handlers;
@@ -178,7 +178,14 @@ public class AsyncHandler extends ExtHandler {
                                 return;
                             }
                         } else {
-                            rec = recordQueue.take();
+                            rec = recordQueue.poll();
+                            if (rec == null) {
+                                // queue ran empty, so let's do a flush on the handlers
+                                // this way ExtHandlers usually do not need autoflush=true
+                                flush();
+                                // wait for next entry in queue
+                                rec = recordQueue.take();
+                            }
                         }
                     } catch (InterruptedException e) {
                         intr = true;
