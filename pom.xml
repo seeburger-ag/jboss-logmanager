@@ -95,9 +95,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
-                        <Export-Package>
-                            ${project.groupId}.*;version=${project.version};-split-package:=error
-                        </Export-Package>
+                        <Export-Package>org.jboss.logmanager.*;version=${project.version};-split-package:=error</Export-Package>
                     </instructions>
                 </configuration>
                 <executions>
