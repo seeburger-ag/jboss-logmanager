@@ -29,7 +29,7 @@
     <groupId>com.seeburger.as</groupId>
     <artifactId>jboss-logmanager</artifactId>
     <packaging>jar</packaging>
-    <version>1.3.2.SEE2-SNAPSHOT</version>
+    <version>1.3.2.SEE1-SNAPSHOT</version>
 
     <scm>
         <connection>scm:git:git@github.com:seeburger-ag/jboss-logmanager.git</connection>
